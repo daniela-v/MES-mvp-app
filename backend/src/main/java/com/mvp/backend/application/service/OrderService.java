@@ -60,7 +60,7 @@ public class OrderService {
 
         Order savedOrder = orderRepository.save(order);
 
-        paymentService.createSucceededMockPayment(savedOrder, now);
+        paymentService.createSucceededMockPayment(savedOrder, now); //Mocking. Should be entirely decoupled and re-written to be async.
         savedOrder.setStatus(OrderStatus.PAID);
         orderRepository.save(savedOrder);
 

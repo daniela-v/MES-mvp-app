@@ -27,17 +27,15 @@ public class OnboardingService {
     private final OnboardingRepository onboardingRepository;
     private final StudentRepository studentRepository;
     private final EnrolmentRepository enrolmentRepository;
-    private final OrderRepository orderRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
     public OnboardingService(OnboardingRepository onboardingRepository, StudentRepository studentRepository,
-                             EnrolmentRepository enrolmentRepository, OrderRepository orderRepository,
+                             EnrolmentRepository enrolmentRepository,
                              PasswordEncoder passwordEncoder, JwtService jwtService) {
         this.onboardingRepository = onboardingRepository;
         this.studentRepository = studentRepository;
         this.enrolmentRepository = enrolmentRepository;
-        this.orderRepository = orderRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
     }
@@ -74,7 +72,7 @@ public class OnboardingService {
 
         if (student.getStatus() != StudentStatus.ACTIVE) {
             if (!StringUtils.hasText(request.password())) {
-                throw new IllegalArgumentException("Password is required");
+                throw new IllegalArgumentException("Password is required"); //This validation shouldn't live here in prod app. this is mvp hack. onboarding should be re-written
             }
             student.setName(request.name());
             student.setEmail(request.email());

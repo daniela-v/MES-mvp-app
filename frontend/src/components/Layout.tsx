@@ -24,7 +24,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
             </Box>
             <Box>
               <Typography variant="h6" sx={layoutSx.brandText}>MVP LMS</Typography>
-              <Typography variant="caption" color="text.secondary">Parent checkout to student learning</Typography>
             </Box>
           </Stack>
           <Stack direction="row" spacing={1}>
