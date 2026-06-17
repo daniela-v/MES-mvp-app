@@ -186,7 +186,6 @@ See `backend/README.md` for full endpoint documentation.
 - Some limitations - no parent is created, payment is mocked, the link url is for onboarding, it isn't a general link for the course and once accessed to decide if the user needs to be onboarded or not, there could be lots of improvements made to the product. Enrolment is created regardless if the user is connected to the course already. Enrolment needs to be unique. This is just an MVP.
 - Domain driven design is followed. Modelling the domain was key for building the application and important step at the start. The backend follows modular, extensible architecture.
 - There is no public payment controller or payment confirmation endpoint in the MVP. `OrderService` owns order completion and delegates mock payment creation to `PaymentService`.
-- Onboarding is optional. It is created only when the resolved student is not already active. 
 - The backend does not implement webhooks, payment intents, checkout sessions, refunds, retries, or the Stripe SDK.
 - The frontend needs one checkout call: submit the checkout form to `POST /api/v1/orders`. The response always contains `accessUrl`; open or share that landing link.
 - Simple h2 in-memory db is set up
