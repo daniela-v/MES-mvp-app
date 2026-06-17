@@ -22,6 +22,9 @@ docker compose up
 - Java for backend 
 
 Parent purchase flow
+
+<details>
+
 ```mermaid
 sequenceDiagram
   Parent->>FE: Clicks Buy Course
@@ -29,13 +32,15 @@ sequenceDiagram
   BE->>BE: Creates Order status=PENDING_PAYMENT
   BE->>BE: PaymentService mocks Payment SUCCEEDED
   BE->>BE: Marks Order PAID
-  BE->>BE: Creates or finds Student
-  BE->>BE: Creates Enrolment
-  BE->>BE: Creates Onboarding only if required
+  BE->>BE: Creates or finds Student + Enrolment + Onboarding if required
   BE-->>FE: paid order result + accessUrl
 ```
+</details>
 
 Student onboarding flow
+
+<details>
+
 ```mermaid
 sequenceDiagram
   Student->>FE: Opens onboarding link
@@ -50,6 +55,11 @@ sequenceDiagram
   FE->>FE: Stores JWT for LMS access
 ```
 
+</details>
+
+LMS Dashboard
+<details>
+
 ```mermaid
 sequenceDiagram
   Student->>FE: Opens LMS dashboard
@@ -58,6 +68,11 @@ sequenceDiagram
   BE-->>FE: student dashboard summary
   FE-->>Student: Shows dashboard
 ```
+
+</details>
+
+Display of enrolled courses
+<details>
 
 ```mermaid
 sequenceDiagram
@@ -68,6 +83,8 @@ sequenceDiagram
   BE-->>FE: enrolment list
   FE-->>Student: Shows enrolled courses
 ```
+
+</details>
 
 ## ER Diagram
 
@@ -166,7 +183,7 @@ See `backend/README.md` for full endpoint documentation.
 
 ## Key technical decisions
 
-- Some limitations - no parent is created, payment is mocked, the link url is for onboarding, it isn't a general link for the course and once accessed to decide if the user needs to be onboarded or not, there could be lots of improvements made to the product. This is just an MVP.
+- Some limitations - no parent is created, payment is mocked, the link url is for onboarding, it isn't a general link for the course and once accessed to decide if the user needs to be onboarded or not, there could be lots of improvements made to the product. Enrolment is created regardless if the user is connected to the course already. Enrolment needs to be unique. This is just an MVP.
 - Domain driven design is followed. Modelling the domain was key for building the application and important step at the start. The backend follows modular, extensible architecture.
 - There is no public payment controller or payment confirmation endpoint in the MVP. `OrderService` owns order completion and delegates mock payment creation to `PaymentService`.
 - Onboarding is optional. It is created only when the resolved student is not already active. 
