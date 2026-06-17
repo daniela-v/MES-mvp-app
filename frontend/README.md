@@ -6,10 +6,9 @@ npm install
 npm run dev
 ```
 
-## Build and lint
+## Run tests
 ```bash
-npm run lint
-npm run build
+npm run test
 ```
 
 ## Routes
