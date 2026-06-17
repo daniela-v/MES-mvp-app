@@ -1,0 +1,153 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: dani
+      changes:
+        - createTable:
+            tableName: courses
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: subject, type: VARCHAR(255), constraints: { nullable: false } }
+              - column: { name: school_year, type: VARCHAR(50), constraints: { nullable: false } }
+              - column: { name: price, type: "DECIMAL(10,2)", constraints: { nullable: false } }
+
+        - createTable:
+            tableName: students
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: name, type: VARCHAR(255), constraints: { nullable: false } }
+              - column: { name: email, type: VARCHAR(255), constraints: { nullable: false, unique: true } }
+              - column: { name: password_hash, type: VARCHAR(255) }
+              - column: { name: status, type: VARCHAR(50), constraints: { nullable: false } }
+
+        - createTable:
+            tableName: orders
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: parent_name, type: VARCHAR(255), constraints: { nullable: false } }
+              - column: { name: parent_email, type: VARCHAR(255), constraints: { nullable: false } }
+              - column: { name: course_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: student_name, type: VARCHAR(255), constraints: { nullable: false } }
+              - column: { name: student_email, type: VARCHAR(255), constraints: { nullable: false } }
+              - column: { name: status, type: VARCHAR(50), constraints: { nullable: false } }
+              - column: { name: created_at, type: TIMESTAMP, constraints: { nullable: false } }
+              - column: { name: checkout_id, type: VARCHAR(255), constraints: { nullable: false, unique: true } }
+
+        - addForeignKeyConstraint:
+            baseTableName: orders
+            baseColumnNames: course_id
+            constraintName: fk_orders_course
+            referencedTableName: courses
+            referencedColumnNames: id
+
+
+        - createTable:
+            tableName: payments
+            columns:
+              - column: { name: id, type: VARCHAR(36), constraints: { primaryKey: true, nullable: false } }
+              - column: { name: order_id, type: BIGINT, constraints: { nullable: false, unique: true } }
+              - column: { name: amount, type: "DECIMAL(10,2)", constraints: { nullable: false } }
+              - column: { name: currency, type: VARCHAR(3), constraints: { nullable: false } }
+              - column: { name: provider, type: VARCHAR(50), constraints: { nullable: false } }
+              - column: { name: provider_payment_id, type: VARCHAR(255), constraints: { nullable: false } }
+              - column: { name: status, type: VARCHAR(50), constraints: { nullable: false } }
+              - column: { name: created_at, type: TIMESTAMP, constraints: { nullable: false } }
+              - column: { name: paid_at, type: TIMESTAMP, constraints: { nullable: false } }
+
+        - addForeignKeyConstraint:
+            baseTableName: payments
+            baseColumnNames: order_id
+            constraintName: fk_payments_order
+            referencedTableName: orders
+            referencedColumnNames: id
+
+        - createTable:
+            tableName: enrolments
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: student_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: course_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: order_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: created_at, type: TIMESTAMP, constraints: { nullable: false } }
+              - column: { name: valid_until, type: TIMESTAMP, constraints: { nullable: false } }
+              - column: { name: status, type: VARCHAR(50), constraints: { nullable: false } }
+
+        - addForeignKeyConstraint:
+            baseTableName: enrolments
+            baseColumnNames: student_id
+            constraintName: fk_enrolments_student
+            referencedTableName: students
+            referencedColumnNames: id
+
+        - addForeignKeyConstraint:
+            baseTableName: enrolments
+            baseColumnNames: course_id
+            constraintName: fk_enrolments_course
+            referencedTableName: courses
+            referencedColumnNames: id
+
+        - addForeignKeyConstraint:
+            baseTableName: enrolments
+            baseColumnNames: order_id
+            constraintName: fk_enrolments_order
+            referencedTableName: orders
+            referencedColumnNames: id
+
+        - createTable:
+            tableName: onboarding
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: student_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: token, type: VARCHAR(255), constraints: { nullable: false, unique: true } }
+              - column: { name: expires_at, type: TIMESTAMP, constraints: { nullable: false } }
+              - column: { name: completed_at, type: TIMESTAMP }
+
+        - addForeignKeyConstraint:
+            baseTableName: onboarding
+            baseColumnNames: student_id
+            constraintName: fk_onboarding_student
+            referencedTableName: students
+            referencedColumnNames: id
+
+        - createTable:
+            tableName: lessons
+            columns:
+              - column: { name: id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: course_id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: title, type: VARCHAR(255), constraints: { nullable: false } }
+              - column: { name: content, type: CLOB, constraints: { nullable: false } }
+              - column: { name: lesson_sequence, type: INT, constraints: { nullable: false } }
+
+        - addForeignKeyConstraint:
+            baseTableName: lessons
+            baseColumnNames: course_id
+            constraintName: fk_lessons_course
+            referencedTableName: courses
+            referencedColumnNames: id
+
+  - changeSet:
+      id: 2
+      author: dani
+      changes:
+        - sql:
+            splitStatements: true
+            sql: |
+              INSERT INTO courses(id, subject, school_year, price) VALUES (1, 'Maths', 'YEAR_FIVE', 199.00);
+              INSERT INTO courses(id, subject, school_year, price) VALUES (2, 'Science', 'YEAR_SIX', 219.00);
+              INSERT INTO courses(id, subject, school_year, price) VALUES (3, 'English', 'YEAR_SEVEN', 179.00);
+              INSERT INTO courses(id, subject, school_year, price) VALUES (4, 'History', 'YEAR_FIVE', 169.00);
+              INSERT INTO courses(id, subject, school_year, price) VALUES (5, 'Geography', 'YEAR_SIX', 189.00);
+              INSERT INTO courses(id, subject, school_year, price) VALUES (6, 'Computing', 'YEAR_SEVEN', 229.00);
+
+              INSERT INTO lessons(id, course_id, title, content, lesson_sequence) VALUES (1, 1, 'Numbers Basics', 'Introduction to numbers and operations.', 1);
+              INSERT INTO lessons(id, course_id, title, content, lesson_sequence) VALUES (2, 1, 'Fractions', 'Understanding fractions and practical examples.', 2);
+              INSERT INTO lessons(id, course_id, title, content, lesson_sequence) VALUES (3, 2, 'Scientific Method', 'Observation, hypothesis, experiments and results.', 1);
+              INSERT INTO lessons(id, course_id, title, content, lesson_sequence) VALUES (4, 2, 'Energy', 'Forms of energy and transformations.', 2);
+              INSERT INTO lessons(id, course_id, title, content, lesson_sequence) VALUES (5, 3, 'Grammar Essentials', 'Nouns, verbs, adjectives and sentence structure.', 1);
+              INSERT INTO lessons(id, course_id, title, content, lesson_sequence) VALUES (6, 3, 'Reading Comprehension', 'Strategies for understanding texts.', 2);
+              INSERT INTO lessons(id, course_id, title, content, lesson_sequence) VALUES (7, 4, 'Ancient Civilisations', 'Explore early societies and how historians use evidence.', 1);
+              INSERT INTO lessons(id, course_id, title, content, lesson_sequence) VALUES (8, 4, 'Timelines and Sources', 'Learn to interpret chronology and primary sources.', 2);
+              INSERT INTO lessons(id, course_id, title, content, lesson_sequence) VALUES (9, 5, 'Maps and Coordinates', 'Use maps, coordinates and scale to understand places.', 1);
+              INSERT INTO lessons(id, course_id, title, content, lesson_sequence) VALUES (10, 5, 'Weather and Climate', 'Understand weather patterns and climate zones.', 2);
+              INSERT INTO lessons(id, course_id, title, content, lesson_sequence) VALUES (11, 6, 'Programming Basics', 'Introduction to algorithms, sequencing and simple programs.', 1);
+              INSERT INTO lessons(id, course_id, title, content, lesson_sequence) VALUES (12, 6, 'Data and the Web', 'Learn how data is represented and shared online.', 2);
