@@ -189,6 +189,7 @@ See `backend/README.md` for full endpoint documentation.
   - payment is mocked - best practice is to do it async and have sercice provider.
   - the link url is for onboarding, it isn't a general link for the course. Limitations around this as we force onboarding when we order.
   - enrolment is created regardless if the user is connected to the course already. Enrolment needs to be unique.
+  - The tests for the FE are reverted (you can see the commit) - there was an issue with the docker image build due to some dependencies, making it super slow, and due to time constraints in the end, I did not spend time fixing it, so I reverted to a stable version.
 - Domain driven design is followed. Modelling the domain was key for building the application and important step at the start. The backend follows modular, extensible architecture.
 - There is no public payment controller or payment confirmation endpoint in the MVP. `OrderService` owns order completion and delegates mock payment creation to `PaymentService`.
 - The backend does not implement webhooks, payment intents, checkout sessions, refunds, retries, or the Stripe SDK.
